@@ -107,4 +107,9 @@ def get_item(request, item_id, **kwargs):
         item = Item.objects.get(id=int(item_id))
     except Item.DoesNotExist:
         return get_res("id有误", "")
-    return get_res("", model_to_dict(item))
+    return get_res("", {
+        "name": item.name,
+        "logo": item.logo,
+        "info": item.info,
+        "class": item.m_class.name
+    })
