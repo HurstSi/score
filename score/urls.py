@@ -19,5 +19,6 @@ from common.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path("users/auth", login)
+    path("users/auth", login),
+    path("users/", register),
 ]
