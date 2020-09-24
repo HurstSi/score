@@ -32,6 +32,7 @@ class Score(models.Model):
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     item = models.ForeignKey(Item, on_delete=models.DO_NOTHING)
     content = models.IntegerField()
+    modification = models.IntegerField(default=1) # 修改次数
 
     def __str__(self):
         return self.item.name

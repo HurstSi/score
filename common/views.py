@@ -101,6 +101,46 @@ def get_classes(request):
     return get_res("", res)
 
 
+@csrf_exempt
+@token_verify
+def modify_score(request, **kwargs):
+    method = request.method
+    data = json.loads(request.body)
+    item_id = data.get("id")
+    content = data.get("content")
+    # 判断项目id正确性
+    try:
+        item = Item.objects.get(id=item_id)
+    except Item.DoesNotExist:
+        return get_res("项目id错误", "")
+
+    # POST方法为添加评分信息
+    if method == "POST":
+        # 判断是够为首次添加评分
+        try:
+            Score.objects.get(item=item, user=kwargs.get("user"))
+            return get_res("该评分已存在，请勿重复添加", "")
+        except Score.DoesNotExist:
+            pass
+        score = Score(item=item, user=kwargs.get("user"), content=content)
+        score.save()
+        return get_res("", "success")
+    # PUT方法为修改信息
+    elif method == "PUT":
+        # 判断评分是否可修改
+        try:
+            score = Score.objects.get(item=item, user=kwargs.get("user"))
+            if score.modification >= 3:
+                return get_res("评分次数已达上限", "")
+        except Score.DoesNotExist:
+            return get_res("未找到相应评分", "")
+        # 修改评分
+        score.content = content
+        score.modification += 1
+        score.save()
+        return get_res("", "success")
+
+
 @token_verify
 def get_item(request, item_id, **kwargs):
     try:

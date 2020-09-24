@@ -22,5 +22,6 @@ urlpatterns = [
     path("users/auth", login),
     path("users/", register),
     path("classes", get_classes),
-    path("item/<item_id>", get_item)
+    path("item/<item_id>", get_item),
+    path("score/", modify_score)
 ]
