@@ -114,6 +114,10 @@ def modify_score(request, **kwargs):
     except Item.DoesNotExist:
         return get_res("项目id错误", "")
 
+    # 判断评分的项目和用户是否处于同一讲台
+    if item.m_class != kwargs.get("user").m_class:
+        return get_res("只能对自己讲台的项目评分!!!", "")
+
     # POST方法为添加评分信息
     if method == "POST":
         # 判断是够为首次添加评分
