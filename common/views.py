@@ -139,6 +139,8 @@ def modify_score(request, **kwargs):
         score.modification += 1
         score.save()
         return get_res("", "success")
+    else:
+        return get_res("请求方法有误", "")
 
 
 @token_verify
