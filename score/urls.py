@@ -21,4 +21,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("users/auth", login),
     path("users/", register),
+    path("classes", get_classes),
 ]

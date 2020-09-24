@@ -47,7 +47,8 @@ def login(request):
     return get_res("", {
         "stuNum": user.stuNum,
         "name": user.name,
-        "token": get_token(user)
+        "token": get_token(user),
+        "class": user.m_class.name
     })
 
 
@@ -59,17 +60,29 @@ def register(request):
     code = data.get("code")
     stuNum = data.get("stuNum")
     name = data.get("name")
+    class_id = data.get("class")
+    try:
+        m_class = Class.objects.get(id=class_id)
+    except Class.DoesNotExist:
+        return get_res("讲台不存在", "")
     # 注册用户
     try:
         User.objects.get(name=name)
         return get_res("该用户已注册", "")
     except User.DoesNotExist:
         openid = get_openid(code)
-        user = User(openid=openid, stuNum=stuNum, name=name)
+        user = User(openid=openid, stuNum=stuNum, name=name, m_class=m_class)
         user.save()
     return get_res("", {
         "stuNum": user.stuNum,
         "name": user.name,
-        "token": get_token(user)
+        "token": get_token(user),
+        "class": user.m_class.name
     })
 
+
+def get_classes(request):
+    res = []
+    for c in Class.objects.all():
+        res.append(model_to_dict(c))
+    return get_res("", res)
