@@ -61,7 +61,8 @@ def login(request):
         "stuNum": user.stuNum,
         "name": user.name,
         "token": get_token(user),
-        "class": user.m_class.name
+        "class": user.m_class.name,
+        "is_admin": user.is_admin
     })
 
 
@@ -90,7 +91,8 @@ def register(request):
         "stuNum": user.stuNum,
         "name": user.name,
         "token": get_token(user),
-        "class": user.m_class.name
+        "class": user.m_class.name,
+        "is_admin": user.is_admin
     })
 
 

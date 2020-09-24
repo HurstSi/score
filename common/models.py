@@ -13,6 +13,7 @@ class User(models.Model):
     stuNum = models.CharField(max_length=20)
     name = models.CharField(max_length=128)
     m_class = models.ForeignKey(Class, on_delete=models.DO_NOTHING, null=True)
+    is_admin = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
