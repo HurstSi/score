@@ -2,28 +2,36 @@ from django.db import models
 
 
 class User(models.Model):
-    id = models.IntegerField(primary_key=True)
     openid = models.CharField(max_length=64)
     stuNum = models.CharField(max_length=20)
     name = models.CharField(max_length=128)
 
+    def __str__(self):
+        return self.name
+
 
 class Item(models.Model):
-    id = models.IntegerField(primary_key=True)
     name = models.CharField(max_length=128)
     logo = models.CharField(max_length=256)
     info = models.TextField()
 
+    def __str__(self):
+        return self.name
+
 
 class Score(models.Model):
-    id = models.IntegerField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     item = models.ForeignKey(Item, on_delete=models.DO_NOTHING)
     content = models.IntegerField()
 
+    def __str__(self):
+        return self.item.name
+
 
 class Token(models.Model):
-    id = models.IntegerField(primary_key=True)
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     content = models.CharField(max_length=32)
     createTime = models.IntegerField()
+
+    def __str__(self):
+        return self.user.name
