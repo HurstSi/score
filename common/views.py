@@ -9,6 +9,16 @@ import time
 import json
 
 
+def token_verify(func):
+    def wrap(request, *args, **kwargs):
+        try:
+            token = Token.objects.get(content=request.headers.get("token"))
+        except Token.DoesNotExist:
+            return get_res("权限验证失败", "")
+        return func(request, *args, **kwargs, user=token.user)
+    return wrap
+
+
 def get_token(user):
     try:
         token = Token.objects.get(user=user)
@@ -20,7 +30,10 @@ def get_token(user):
 
 
 def get_res(mes, data):
-    return JsonResponse({"mes": mes, "data": data})
+    res = JsonResponse({"mes": mes, "data": data})
+    if mes:
+        res.status_code = 400
+    return res
 
 
 def except_error(func):
@@ -86,3 +99,12 @@ def get_classes(request):
     for c in Class.objects.all():
         res.append(model_to_dict(c))
     return get_res("", res)
+
+
+@token_verify
+def get_item(request, item_id, **kwargs):
+    try:
+        item = Item.objects.get(id=int(item_id))
+    except Item.DoesNotExist:
+        return get_res("id有误", "")
+    return get_res("", model_to_dict(item))
