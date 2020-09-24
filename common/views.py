@@ -155,3 +155,18 @@ def get_item(request, item_id, **kwargs):
         "info": item.info,
         "class": item.m_class.name
     })
+
+
+@token_verify
+def get_my_score(request, **kwargs):
+    user = kwargs.get("user")
+    scores = []
+    for score in Score.objects.filter(user=user):
+        scores.append({
+            "itemName": score.item.name,
+            "content": score.content,
+            "modification": score.modification
+        })
+    return get_res("", scores)
+
+
