@@ -1,4 +1,5 @@
 import requests
+import json
 
 
 def get_openid(code):
@@ -10,6 +11,5 @@ def get_openid(code):
     }
 
     response = requests.get("https://api.weixin.qq.com/sns/jscode2session", params=data)
-    res_data = response.json()
-    if int(res_data['errcode']) == 0:
-        return res_data['openid']
+    res_data = json.loads(response.text)
+    return res_data['openid']
