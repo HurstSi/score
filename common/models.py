@@ -22,6 +22,7 @@ class Item(models.Model):
     name = models.CharField(max_length=128)
     logo = models.CharField(max_length=256)
     info = models.TextField()
+    m_class = models.ForeignKey(Class, on_delete=models.DO_NOTHING, null=True)
 
     def __str__(self):
         return self.name
@@ -31,7 +32,6 @@ class Score(models.Model):
     user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
     item = models.ForeignKey(Item, on_delete=models.DO_NOTHING)
     content = models.IntegerField()
-    m_class = models.ForeignKey(Class, on_delete=models.DO_NOTHING, null=True)
 
     def __str__(self):
         return self.item.name
