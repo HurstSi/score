@@ -10,11 +10,26 @@ import json
 
 
 def token_verify(func):
+    """验证用户是否登录"""
     def wrap(request, *args, **kwargs):
         try:
             token = Token.objects.get(content=request.headers.get("token"))
         except Token.DoesNotExist:
             return get_res("权限验证失败", "")
+        return func(request, *args, **kwargs, user=token.user)
+    return wrap
+
+
+def verify_admin(func):
+    """验证管理员权限"""
+    def wrap(request, *args, **kwargs):
+        try:
+            token = Token.objects.get(content=request.headers.get("token"))
+            assert token.user.is_admin
+        except Token.DoesNotExist:
+            return get_res("请登录", "")
+        except AssertionError:
+            return get_res("非管理员用户", "")
         return func(request, *args, **kwargs, user=token.user)
     return wrap
 
@@ -42,7 +57,6 @@ def except_error(func):
             return func(request, *args, **kwargs)
         except Exception as e:
             return get_res("未知错误", "")
-
     return wrap
 
 
