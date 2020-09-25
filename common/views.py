@@ -11,17 +11,20 @@ import json
 
 def token_verify(func):
     """验证用户是否登录"""
+
     def wrap(request, *args, **kwargs):
         try:
             token = Token.objects.get(content=request.headers.get("token"))
         except Token.DoesNotExist:
             return get_res("权限验证失败", "")
         return func(request, *args, **kwargs, user=token.user)
+
     return wrap
 
 
 def verify_admin(func):
     """验证管理员权限"""
+
     def wrap(request, *args, **kwargs):
         try:
             token = Token.objects.get(content=request.headers.get("token"))
@@ -31,6 +34,7 @@ def verify_admin(func):
         except AssertionError:
             return get_res("非管理员用户", "")
         return func(request, *args, **kwargs, user=token.user)
+
     return wrap
 
 
@@ -57,6 +61,7 @@ def except_error(func):
             return func(request, *args, **kwargs)
         except Exception as e:
             return get_res("未知错误", "")
+
     return wrap
 
 
@@ -226,3 +231,24 @@ def get_scores_by_class(request, **kwargs):
             "content": score.content,
         })
     return get_res("", res)
+
+
+@csrf_exempt
+@verify_admin
+def add_item(request, **kwargs):
+    data = json.loads(request.body)
+    method = request.method
+    if method != "POST":
+        return get_res("请求方法错误", "")
+    name = data.get("name")
+    logo = data.get("logo")
+    info = data.get("info")
+    class_id = data.get("class")
+    # 判断class是否有效
+    try:
+        _class = Class.objects.get(id=class_id)
+    except Class.DoesNotExist:
+        return get_res("讲台错误", "")
+    item = Item(name=name, logo=logo, info=info, m_class=_class)
+    item.save()
+    return get_res("", item.id)
