@@ -31,6 +31,7 @@ urlpatterns = [
     # 项目相关
     path("item/<item_id>", get_item),   # 获取项目详情
     path("item/", add_item),            # 添加项目
+    path("item", get_all_item),         # 获取所有项目
 
     # 评分相关
     path("score/", modify_score),   # 添加/修改评分

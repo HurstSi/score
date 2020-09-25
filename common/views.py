@@ -252,3 +252,17 @@ def add_item(request, **kwargs):
     item = Item(name=name, logo=logo, info=info, m_class=_class)
     item.save()
     return get_res("", item.id)
+
+
+@verify_admin
+def get_all_item(request, **kwargs):
+    items = []
+    for item in Item.objects.all():
+        items.append({
+            "id": item.id,
+            "name": item.name,
+            "logo": item.logo,
+            "info": item.info,
+            "class": item.m_class.name
+        })
+    return get_res("", items)
