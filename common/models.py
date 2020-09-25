@@ -12,7 +12,7 @@ class User(models.Model):
     openid = models.CharField(max_length=64)
     stuNum = models.CharField(max_length=20)
     name = models.CharField(max_length=128)
-    m_class = models.ForeignKey(Class, on_delete=models.DO_NOTHING, null=True)
+    m_class = models.ForeignKey(Class, on_delete=models.CASCADE, null=True)
     is_admin = models.BooleanField(default=False)
 
     def __str__(self):
@@ -23,15 +23,15 @@ class Item(models.Model):
     name = models.CharField(max_length=128)
     logo = models.CharField(max_length=256)
     info = models.TextField()
-    m_class = models.ForeignKey(Class, on_delete=models.DO_NOTHING, null=True)
+    m_class = models.ForeignKey(Class, on_delete=models.CASCADE, null=True)
 
     def __str__(self):
         return self.name
 
 
 class Score(models.Model):
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
-    item = models.ForeignKey(Item, on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    item = models.ForeignKey(Item, on_delete=models.CASCADE)
     content = models.IntegerField()
     modification = models.IntegerField(default=1) # 修改次数
 
@@ -40,7 +40,7 @@ class Score(models.Model):
 
 
 class Token(models.Model):
-    user = models.ForeignKey(User, on_delete=models.DO_NOTHING)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.CharField(max_length=32)
     createTime = models.IntegerField()
 
