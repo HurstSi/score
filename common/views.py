@@ -210,3 +210,19 @@ def add_class(request, **kwargs):
         _class.save()
         return get_res("", "success")
 
+
+@verify_admin
+def get_scores_by_class(request, **kwargs):
+    item_id = request.GET.get("itemId")
+    try:
+        item = Item.objects.get(id=item_id)
+    except Item.DoesNotExist:
+        return get_res("项目id错误", "")
+    res = []
+    for score in Score.objects.filter(item=item):
+        res.append({
+            "name": score.user.name,
+            "stuNum": score.user.stuNum,
+            "content": score.content,
+        })
+    return get_res("", res)
