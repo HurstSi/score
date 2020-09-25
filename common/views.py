@@ -190,3 +190,23 @@ def get_my_score(request, **kwargs):
     return get_res("", scores)
 
 
+@csrf_exempt
+@verify_admin
+def add_class(request, **kwargs):
+    """添加讲台"""
+    user = kwargs.get("user")
+    method = request.method
+    data = json.loads(request.body)
+    if method != "POST":
+        return get_res("请求方法错误", "")
+    name = data.get("name")
+    if not name:
+        return get_res("讲台名称为空", "")
+    try:
+        Class.objects.get(name=name)
+        return get_res("该讲台已存在", "")
+    except Class.DoesNotExist:
+        _class = Class(name=name)
+        _class.save()
+        return get_res("", "success")
+

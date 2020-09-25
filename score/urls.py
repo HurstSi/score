@@ -26,6 +26,7 @@ urlpatterns = [
 
     # 讲台相关
     path("classes", get_classes),   # 获取讲台列表
+    path("classes/", add_class),   # 添加讲台
 
     # 项目相关
     path("item/<item_id>", get_item),   # 获取项目详情
