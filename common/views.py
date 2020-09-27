@@ -268,3 +268,17 @@ def get_all_item(request, **kwargs):
             "class": item.m_class.name
         })
     return get_res("", items)
+
+
+@csrf_exempt
+@token_verify
+def add_feedback(request, **kwargs):
+    method = request.method
+    data = json.loads(request.body)
+    if method != "POST":
+        return get_res("请求方法错误", "")
+    title = data.get("title")
+    content = data.get("content")
+    feedback = FeedBack(title=title, content=content, create_time=int(time.time()), user=kwargs.get("user"))
+    feedback.save()
+    return get_res("", "success")

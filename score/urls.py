@@ -37,4 +37,7 @@ urlpatterns = [
     path("score/", modify_score),   # 添加/修改评分
     path("score", get_my_score),    # 获取用户评分列表
     path("score/item", get_scores_by_class),    # 获取项目所有评分
+
+    # 反馈相关
+    path("feedbacks/", add_feedback),   # 添加反馈
 ]

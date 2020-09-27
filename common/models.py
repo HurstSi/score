@@ -39,6 +39,16 @@ class Score(models.Model):
         return self.item.name
 
 
+class FeedBack(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    title = models.CharField(max_length=255)
+    content = models.TextField()
+    create_time = models.IntegerField()
+
+    def __str__(self):
+        return self.user.name + "--" + self.title
+
+
 class Token(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     content = models.CharField(max_length=32)
