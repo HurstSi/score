@@ -190,7 +190,9 @@ def get_my_score(request, **kwargs):
         scores.append({
             "itemName": score.item.name,
             "content": score.content,
-            "modification": score.modification
+            "modification": score.modification,
+            "logo": score.item.logo,
+            "itemId": score.item.id
         })
     return get_res("", scores)
 
