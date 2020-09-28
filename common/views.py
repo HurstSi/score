@@ -249,6 +249,8 @@ def add_feedback(request, **kwargs):
         return get_res("请求方法错误", "")
     title = data.get("title")
     content = data.get("content")
+    if not title or not content:
+        return get_res("标题或正文为空！！", "")
     feedback = FeedBack(title=title, content=content, create_time=int(time.time()), user=kwargs.get("user"))
     feedback.save()
     return get_res("", "success")
