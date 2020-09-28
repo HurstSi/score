@@ -36,7 +36,7 @@ class Score(models.Model):
     modification = models.IntegerField(default=1) # 修改次数
 
     def __str__(self):
-        return self.item.name
+        return self.user.name + "-" + self.item.name
 
 
 class FeedBack(models.Model):
