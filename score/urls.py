@@ -22,7 +22,7 @@ urlpatterns = [
 
     # 用户相关
     path("users/auth", login),  # 登录
-    path("users/", register),   # 注册
+    path("users/", modify_userinfo),   # 注册/修改个人信息
 
     # 讲台相关
     path("classes", get_classes),   # 获取讲台列表

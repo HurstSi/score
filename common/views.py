@@ -85,36 +85,6 @@ def login(request):
     })
 
 
-@csrf_exempt
-def register(request):
-    data = json.loads(request.body)
-    if request.method != "POST":
-        return get_res("请求方法错误", "")
-    code = data.get("code")
-    stuNum = data.get("stuNum")
-    name = data.get("name")
-    class_id = data.get("class")
-    try:
-        m_class = Class.objects.get(id=class_id)
-    except Class.DoesNotExist:
-        return get_res("讲台不存在", "")
-    # 注册用户
-    try:
-        User.objects.get(name=name)
-        return get_res("该用户已注册", "")
-    except User.DoesNotExist:
-        openid = get_openid(code)
-        user = User(openid=openid, stuNum=stuNum, name=name, m_class=m_class)
-        user.save()
-    return get_res("", {
-        "stuNum": user.stuNum,
-        "name": user.name,
-        "token": get_token(user),
-        "class": user.m_class.name,
-        "is_admin": user.is_admin
-    })
-
-
 def get_classes(request):
     res = []
     for c in Class.objects.all():
@@ -282,3 +252,49 @@ def add_feedback(request, **kwargs):
     feedback = FeedBack(title=title, content=content, create_time=int(time.time()), user=kwargs.get("user"))
     feedback.save()
     return get_res("", "success")
+
+
+@csrf_exempt
+def modify_userinfo(request, **kwargs):
+    data = json.loads(request.body)
+    method = request.method
+    # 获取请求正文
+    code = data.get("code")
+    stuNum = data.get("stuNum")
+    name = data.get("name")
+    class_id = data.get("class")
+    try:
+        m_class = Class.objects.get(id=class_id)
+    except Class.DoesNotExist:
+        return get_res("讲台不存在", "")
+    if request.method == "POST":
+        # 注册用户
+        try:
+            User.objects.get(name=name)
+            return get_res("该用户已注册", "")
+        except User.DoesNotExist:
+            openid = get_openid(code)
+            user = User(openid=openid, stuNum=stuNum, name=name, m_class=m_class)
+            user.save()
+        return get_res("", {
+            "stuNum": user.stuNum,
+            "name": user.name,
+            "token": get_token(user),
+            "class": user.m_class.name,
+            "is_admin": user.is_admin
+        })
+    elif method == "PUT":
+        # 验证token
+        try:
+            token = Token.objects.get(content=request.headers.get("token"))
+        except Token.DoesNotExist:
+            return get_res("权限验证失败", "")
+
+        user = token.user
+        user.name = name
+        user.m_class = m_class
+        user.stuNum = stuNum
+        user.save()
+        return get_res("", "success")
+    else:
+        return get_res("请求方法错误", "")
