@@ -85,6 +85,7 @@ def login(request):
     })
 
 
+@except_error
 def get_classes(request):
     res = []
     for c in Class.objects.all():
@@ -93,6 +94,7 @@ def get_classes(request):
 
 
 @csrf_exempt
+@except_error
 @token_verify
 def modify_score(request, **kwargs):
     method = request.method
@@ -138,6 +140,7 @@ def modify_score(request, **kwargs):
         return get_res("请求方法有误", "")
 
 
+@except_error
 @token_verify
 def get_item(request, item_id, **kwargs):
     try:
@@ -152,6 +155,7 @@ def get_item(request, item_id, **kwargs):
     })
 
 
+@except_error
 @token_verify
 def get_my_score(request, **kwargs):
     user = kwargs.get("user")
@@ -168,6 +172,7 @@ def get_my_score(request, **kwargs):
 
 
 @csrf_exempt
+@except_error
 @verify_admin
 def add_class(request, **kwargs):
     """添加讲台"""
@@ -188,6 +193,7 @@ def add_class(request, **kwargs):
         return get_res("", "success")
 
 
+@except_error
 @verify_admin
 def get_scores_by_class(request, **kwargs):
     item_id = request.GET.get("itemId")
@@ -206,6 +212,7 @@ def get_scores_by_class(request, **kwargs):
 
 
 @csrf_exempt
+@except_error
 @verify_admin
 def add_item(request, **kwargs):
     data = json.loads(request.body)
@@ -226,6 +233,7 @@ def add_item(request, **kwargs):
     return get_res("", item.id)
 
 
+@except_error
 @verify_admin
 def get_all_item(request, **kwargs):
     items = []
@@ -241,6 +249,7 @@ def get_all_item(request, **kwargs):
 
 
 @csrf_exempt
+@except_error
 @token_verify
 def add_feedback(request, **kwargs):
     method = request.method
@@ -257,6 +266,7 @@ def add_feedback(request, **kwargs):
 
 
 @csrf_exempt
+@except_error
 def modify_userinfo(request, **kwargs):
     data = json.loads(request.body)
     method = request.method
@@ -300,3 +310,4 @@ def modify_userinfo(request, **kwargs):
         return get_res("", "success")
     else:
         return get_res("请求方法错误", "")
+
