@@ -280,12 +280,12 @@ def modify_userinfo(request, **kwargs):
     except Class.DoesNotExist:
         return get_res("讲台不存在", "")
     if request.method == "POST":
+        openid = get_openid(code)
         # 注册用户
         try:
-            User.objects.get(name=name)
+            User.objects.get(openid=openid)
             return get_res("该用户已注册", "")
         except User.DoesNotExist:
-            openid = get_openid(code)
             user = User(openid=openid, stuNum=stuNum, name=name, m_class=m_class)
             user.save()
         return get_res("", {
